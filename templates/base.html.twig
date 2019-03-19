@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+    <div style="height: 100px; background-color: rgba(255,255,255,0.37)">
+        {% if not app.user %}
+        <a href="{{ path('app_login') }}">Login</a>
+        <a href="{{ path('app_registration') }}">Inscription</a>
+        {% else %}
+        <a href="{{ path('app_logout') }}">Déconnexion</a>
+        {% endif %}
+    </div>
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </body>
+</html>
