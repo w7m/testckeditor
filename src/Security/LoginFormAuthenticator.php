@@ -65,29 +65,34 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
-
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
-
+        if ($user->getIsActive() === false) {
+            throw new CustomUserMessageAuthenticationException('compte non activé.');
+        }
         return $user;
     }
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+//        if ($credentials['isActive']===false){
+//            dd('not active');
+//            return $this->urlGenerator->generate('app_login');
+//        }
+
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        dd('okok');
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
-
-        return new RedirectResponse($this->urlGenerator->generate('comment_index'));
-//        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+////        dd($request->getSession());
+//          return new RedirectResponse($this->urlGenerator->generate('comment_index'));
+////        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

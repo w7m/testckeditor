@@ -33,6 +33,24 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="text", length=255)
+     */
+    private $token;
+
+
+    public function __construct()
+    {
+        $this->setRoles(['ROLE_USER']);
+        $this->setToken(md5(random_bytes(10)));
+        $this->setIsActive(0);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -109,5 +127,29 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
     }
 }
